@@ -2,15 +2,72 @@
 
 
 ## Loading and preprocessing the data
+script to read de data set
 
+```{r}
+w<- read.csv("activity.csv",header=T,)
+library(ggplot2)
+library(lattice)
+```
+
+Explore and summarize the data
+
+```{r}
+str(w)
+summary(w)
+w$interval<- as.factor(w$interval)
+```
+
+agregate the data in days 
+
+```{r}
+d<- tapply(w$steps,w$date,na.rm=T, sum)
+```
+
+plot the histogram 
+
+```{r}
+hist(d, main="Number of steps per day", xlab="steps", col="red",breaks=5)
+```
 
 
 ## What is mean total number of steps taken per day?
 
+The mean and the median are: 
+```{r}
+mean(d, na.rm=T)
+median(d,na.rm=T)
+````
 
 
 ## What is the average daily activity pattern?
 
+``
+the average number of step in the 5 minutes interval is: 
+```{r}
+five<- tapply(w$steps, w$interval, na.rm=T, mean)
+five<- as.data.frame(five)
+five<- cbind(as.numeric(rownames(five)),five)
+colnames(five)<- c("interval","steps")
+````
+Graphically the number of stpeps in the 5 minutes intervals.
+
+```{r}
+plot(five$interval,five$steps, type="l", 
+     main="Mean of number of steps in 5 minutes interval",
+     ylab="Steps", xlab="5 minutes interval", col="blue")
+
+```
+The five minutes interval with the maximun number of steps is
+```{r}
+five[five$steps==max(five$steps),1]
+````
+
+with the value of 
+
+```{r}
+max(five$steps)
+```
 
 
 ## Imputing missing values
